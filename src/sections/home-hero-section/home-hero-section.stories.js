@@ -1,7 +1,7 @@
-import TwoColumnSection from './index'
+import HomeHeroSection from './index'
 const meta = {
-  title: 'Section/TwoColumnSection',
-  component: TwoColumnSection,
+  title: 'Section/HomeHeroSection',
+  component: HomeHeroSection,
   parameters: {
     design: [
       {
@@ -20,8 +20,8 @@ const meta = {
   },
 }
 
-export default meta
+export default meta;
 
 export const Default = {
-  args: {},
+   args: {},
 }

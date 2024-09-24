@@ -5,6 +5,11 @@ export const SECTIONS = [
     sectionType: 'genericTwoColumnSection',
     sectionTitle: 'Generic Two Columns Section',
   },
+  {
+    sectionType: 'homeHeroSection',
+    sectionTitle: 'Home Hero Section',
+  },
+  
 ]
 
 export const structureResolver: StructureResolver = (S) => {
@@ -36,6 +41,18 @@ export const structureResolver: StructureResolver = (S) => {
                   .child(S.documentTypeList(section.sectionType))
               }),
             ),
+        ),
+        S.listItem()
+        .title('Therapy')
+        .child(
+          S.list()
+            .title('Therapy Packages')
+            .items([
+              S.documentTypeListItem('therapyPackagesSection').title('Therapy Packages Section'),
+              S.documentTypeListItem('therapyCategorySection').title('Therapy Category Section'),
+              // S.documentTypeListItem('category').title('Category'),
+              
+            ]),
         ),
     ])
 }

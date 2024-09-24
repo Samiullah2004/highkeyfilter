@@ -1,4 +1,7 @@
 import { genericTwoColumnSection } from './documents/genericTwoColumnSection'
+import  homeHeroSection  from './documents/homeHeroSection'
+import  therapyCategorySection  from './documents/therapyCategory'
+import  therapyPackagesSection  from './documents/therapyPackages'
 import { pages } from './documents/pages'
 import { bodyPortableText } from './objects/bodyPortableText'
 import { button } from './objects/button'
@@ -10,7 +13,9 @@ export const schemaTypes = [
   // documents
   pages,
   genericTwoColumnSection,
-
+  homeHeroSection,
+  therapyPackagesSection,
+  therapyCategorySection,
   // objects
   bodyPortableText,
   customImage,

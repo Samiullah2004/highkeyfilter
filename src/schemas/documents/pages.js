@@ -74,8 +74,39 @@ export const pages = {
           },
           to: [{ type: 'genericTwoColumnSection' }],
         },
+        {
+         title : 'Home Hero Section',
+         name : 'homeHeroSection',
+         type : 'reference',
+         validation: (Rule) => Rule.required(),
+         options: {
+          disableNew: true,
+        },
+         to : [{type : 'homeHeroSection'}]
+        },
+        {
+         title : 'Therapy Packages Section',
+         name : 'therapyPackagesSection',
+         type : 'reference',
+         validation: (Rule) => Rule.required(),
+         options: {
+          disableNew: true,
+        },
+         to : [{type : 'therapyPackagesSection'}]
+        },
+        {
+          name : 'therapyCategorySection',
+          title : 'Therapy Category Section',
+          type : 'reference',
+          validation : (Rule) => Rule.required(),
+          options: {
+            disableNew: true,
+          },
+          to : [{type : 'therapyCategorySection'}]
+        }
       ],
     },
+    
   ],
   preview: {
     select: {

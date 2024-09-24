@@ -1,83 +1,62 @@
 import { groq } from 'next-sanity'
-
-import ModuleRenderer, {
-  fragment as MODULE_FRAGMENT,
-} from '../components/module-renderer'
-import { readToken } from '../lib/sanity.api'
-import { getClient } from '../lib/sanity.client'
-
+import { getClient } from '~/lib/sanity.client'
+import ModuleRender,{fragment as MODULE_FRAGMEN} from '../components/module-render'
 export const getPageQuery = (slug) => groq`
-  *[_type == "pages" && slug.current == '${slug}'] {
-  _type,
+   *[_type == "pages" && slug.current == "${slug}"]{
+     _type,
   _id,
   indexed,
   seoTitle,
   metaDescription,
-  transparentNav,
   title,
   JSONLD,
- "slug": slug.current,
- pageBuilder[]->{
-    ${MODULE_FRAGMENT}
-}
+  "slug": slug.current, 
+  pageBuilder[]->{
+  ${MODULE_FRAGMEN}
   }
+    }
 `
-function Page(props) {
-  const {
-    page: { pageBuilder },
-  } = props
-  return (
-    <>
-      hello
-      <ModuleRenderer modules={pageBuilder} />
-    </>
-  )
+const Page = (props) => {
+  const { page: {pageBuilder}, JSONLD } = props
+  console.log(pageBuilder)
+  return <div>
+    <ModuleRender modules={pageBuilder} /> 
+   </div>
 }
 
 export async function getStaticPaths() {
   const client = getClient()
   const allSlugs = await client.fetch(
     groq`
-      *[_type == "pages"] {    
-        "title": title,
-        "slug": slug.current
-      }
-    `,
+    *[_type == "pages"]{
+    "title" : title,
+    "slug" : slug.current, 
+    }`,
   )
 
-  return {
-    paths:
-      allSlugs?.map(({ slug }) => (slug !== '/' ? `/${slug}` : `${slug}`)) ||
-      [],
-    fallback: 'blocking',
-  }
+  const paths = allSlugs.map(({ slug }) =>
+    slug !== '/' ? `/${slug}` : `${slug}`,
+  )
+
+  return { paths, fallback: 'blocking' }
 }
 
-export const getStaticProps = async ({ draftMode = false, params }) => {
+export async function getStaticProps({ params }) {
   try {
     let slug = '/'
     if (Object.keys(params || {}).length) {
       const { slug: currentSlug } = params
-      slug = currentSlug?.join('/')
+      slug = currentSlug.join('/')
     }
 
-    const client = getClient(draftMode ? readToken : undefined)
-    if (!slug) throw new Error('No slug provided')
+    if (!slug) throw new Error('No Slug Provided')
+    const client = getClient()
     const pageQuery = getPageQuery(slug)
-
     const pageData = await client.fetch(pageQuery)
-    if (pageData?.length === 0) {
-      return {
-        notFound: true,
-        props: {},
-      }
-    }
+
     const props = {
-      draftMode,
-      token: draftMode ? readToken : '',
       page: pageData[0],
       JSONLD: pageData[0]?.JSONLD || '',
-      slug,
     }
     return {
       props,
@@ -87,5 +66,65 @@ export const getStaticProps = async ({ draftMode = false, params }) => {
     throw new Error(error)
   }
 }
-
 export default Page
+
+// import { groq } from "next-sanity"
+// import { getClient } from "~/lib/sanity.client"
+
+// export const getPageQuery = (slug) => groq`
+// *[_type == "pages" && slug.current == '${slug}']{
+//   _type,
+//   _id,
+//   indexed,
+//   seoTitle,
+//   metaDescription,
+//   title,
+//   JSONLD,
+//   "slug": slug.current,
+// }`
+
+// const Page = () => {
+// return(
+//   <div>Hello Page</div>
+// )
+// }
+
+// export async function getStaticPaths() {
+
+//   const client = getClient()
+//   const allSlugs = await client.fetch(
+//     groq`
+//     *[_type == "pages"]{
+//     "title" : title,
+//     "slug" : slug.current,
+//     }
+//     `
+//   )
+
+//   const paths = allSlugs.map(({slug}) => (slug !== "/" ? `/${slug}` : `${slug}`))
+
+//   return { paths, fallback: false }
+// }
+
+// export async function getStaticProps({params}) {
+//  try{
+//   let slug = "/"
+//   if(Object.keys(params || {}).length){
+//     let {slug : currentSlug} = params;
+//     slug = currentSlug.join('/')
+//   }
+
+//   const client = getClient()
+//   if(!slug) throw new Error("No Slug Provided")
+//     const pageQuery = getPageQuery(slug)
+//   const pageData = await client.fetch(pageQuery)
+//   console.log(pageData)
+
+//   return {
+//     props : {}
+//   }
+// }catch(error){
+//   throw new Error(error)
+// }
+// }
+// export default Page;
